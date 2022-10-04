@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres
+    container_name: docker-db
+    restart: always
+    ports:
+      - "6522:5432"
+    env_file:
+      - .env
+    volumes:
+      - pg:/var/lib/postgres/data
+
+  node_app:
+    container_name: students-ci-cd
+    build: .
+    ports:
+      - "6523:5000"
+    depends_on:
+      - db
+    env_file:
+      - .env
+volumes:
+  pg:
