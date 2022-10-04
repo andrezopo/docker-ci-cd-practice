@@ -1,0 +1,19 @@
+name: PullRequest Tests
+on: [pull_request]
+jobs:
+  PullRequest:
+  runs-on: ubuntu-latest
+  steps:
+    - name: Copia o código para o ubuntu do docker
+    - uses: actions/checkout@v3
+    - name: Cria envfile
+    - uses: SpicyPizza/create-envfile@v1
+      with:
+        envkey_POSTGRES_USER: "postgres"
+        envkey_POSTGRES_PASSWORD: "postgres"
+        envkey_POSTGRES_DATABASE: "students-ci-cd-docker_test"
+        envkey_DATABASE_URL: "postgres://postgres:123456@db:5432/students-ci-cd-docker_test"
+        file_name: .env.test
+    - name: Sobe o container do docker da aplicação e roda os testes
+    - run: docker-compose -f docker-compose-test.yml && node_app run test
+    - name: npm i && npm run build
